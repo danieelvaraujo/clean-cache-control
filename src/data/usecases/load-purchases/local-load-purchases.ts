@@ -1,4 +1,5 @@
 import { CacheStore } from "@/data/protocols/cache";
+import { CachePolicy } from "@/data/protocols/cache/cache-policy";
 import { LoadPurchases, SavePurchases } from "@/domain/usecases";
 
 export class LocalLoadPurchases implements SavePurchases, LoadPurchases {
@@ -21,7 +22,7 @@ export class LocalLoadPurchases implements SavePurchases, LoadPurchases {
       const maxAge = new Date(cache.timestamp);
       maxAge.setDate(maxAge.getDate() + 3);
 
-      if (maxAge > this.currentDate) {
+      if (CachePolicy.validate(cache.timestamp, this.currentDate)) {
         return cache.value;
       } else {
         throw new Error();
